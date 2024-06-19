@@ -1,0 +1,40 @@
+/*
+  Warnings:
+
+  - The values [AVAILABE] on the enum `Spot_status` will be removed. If these variants are still used in the database, this will fail.
+
+*/
+-- AlterTable
+ALTER TABLE `Spot` MODIFY `status` ENUM('AVAILABLE', 'RESERVED') NOT NULL;
+
+-- CreateTable
+CREATE TABLE `Ticket` (
+    `id` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `ticketKind` ENUM('FULL', 'HALF') NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `spotId` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `Ticket_spotId_key`(`spotId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `ReservationHistory` (
+    `id` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `ticketKind` ENUM('FULL', 'HALF') NOT NULL,
+    `status` ENUM('RESERVED', 'CANCELED') NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `spotId` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `Ticket` ADD CONSTRAINT `Ticket_spotId_fkey` FOREIGN KEY (`spotId`) REFERENCES `Spot`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ReservationHistory` ADD CONSTRAINT `ReservationHistory_spotId_fkey` FOREIGN KEY (`spotId`) REFERENCES `Spot`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -1,0 +1,87 @@
+###
+# @name findAll
+GET http://localhost:3001/events
+
+###
+# @name createEvent
+POST http://localhost:3001/events
+Content-Type: application/json
+
+{
+    "name": "TDC Floripa",
+    "description": "This is a new event",
+    "date": "2027-01-01T00:00:00Z",
+    "price": 150
+}
+
+###
+@eventId = {{ createEvent.response.body.id }}
+
+###
+# @name findById
+GET http://localhost:3001/events/{{eventId}}
+
+###
+# @name update
+PATCH  http://localhost:3001/events/{{eventId}}
+Content-Type: application/json
+
+{
+    "name": "TDC Floripa 2017"
+}
+
+###
+# @name delete
+DELETE  http://localhost:3001/events/{{eventId}}
+Content-Type: application/json
+
+###SPOTS
+
+###
+# @name findAll
+GET http://localhost:3001/events/{{eventId}}/spots
+
+###
+# @name createSpot
+POST http://localhost:3001/events/{{eventId}}/spots
+Content-Type: application/json
+
+{
+    "name": "A4"
+}
+
+###
+@spotId = {{ createSpot.response.body.id }}
+@spotName = {{ createSpot.response.body.name }}
+
+###
+# @name findById
+GET http://localhost:3001/events/{{eventId}}/spots/{{spotId}}
+
+###
+# @name update
+PATCH  http://localhost:3001/events/{{eventId}}/spots/{{spotId}}
+Content-Type: application/json
+
+{
+    "name": "A1"
+}
+
+###
+# @name delete
+DELETE  http://localhost:3001/events/{{eventId}}/spots/{{spotId}}
+Content-Type: application/json
+
+### RESERVE
+
+###
+# @name reserve
+POST http://localhost:3001/events/{{eventId}}/reserve
+Content-Type: application/json
+X-Api-Token: 123
+
+{
+    "spots": ["{{spotName}}"],
+    "ticket_kind": "FULL",
+    "email": "test@test.com"
+}
